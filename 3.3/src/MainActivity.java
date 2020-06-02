@@ -100,6 +100,7 @@ class Equation {
 class Population {
   public int populationSize;
   public int chromosomeSize;
+  public int mutationCounter;
   public int[][] chromosomes;
   public int[][] deltas;
   public int[][] tmp;
@@ -110,6 +111,7 @@ class Population {
     int chromosomeSize,
     int range
   ) {
+    this.mutationCounter = 0;
     this.populationSize = populationSize;
     this.chromosomeSize = chromosomeSize;
     this.chromosomes = new int[populationSize][chromosomeSize];
@@ -124,6 +126,7 @@ class Population {
   }
 
   public int[] next(Equation equation) {
+    this.mutationCounter = 0;
     for (int i = 0; i < this.populationSize; i++) {
       int j = i % (this.populationSize - 2);
       int[] entry = deltas[j];
@@ -131,6 +134,7 @@ class Population {
       int delta = entry[0]; 
       int step = (int)(delta * 0.5) + 1;
       int modify = random.nextInt(step) - step / 2;
+      this.mutationCounter += 1;
       for (int k = 0; k < this.chromosomeSize; k++) {
         tmp[k][i] = this.chromosomes[index][k] + modify;
       }
@@ -158,7 +162,7 @@ class Population {
     while(true) {
       int[] result = this.next(equation);
       if (result[0] == 0) {
-        return this.chromosomes[result[1]];
+        return this.mutationCounter;
       }
     }
   }
